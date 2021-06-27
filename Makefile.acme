@@ -5,10 +5,16 @@ C1541 := c1541
 ACME  := acme
 LD    := ldo65
 
+ifeq ($(OS),Windows_NT)
+	RM := del /q
+else
+	RM := rm -f
+endif
+
 ACMEFLAGS := -f cbm --cpu 6510 -v
 
 clean::
-	rm -f *.prg *.vice *.d64
+	$(RM) *.prg *.vice *.d64
 
 %.vice: %.a %.prg Makefile.acme
 	$(ACME) $(ACMEFLAGS) --vicelabels $(patsubst %.prg,%.vice,$@) $<
@@ -17,11 +23,8 @@ clean::
 	$(ACME) $(ACMEFLAGS) -o $@ $<
 
 %.d64: %.prg Makefile.acme
-	( \
-		echo format \"$(patsubst %.d64,%,$@),ff\" d64 $@ 8; \
-		echo attach $@ 8;                                   \
-		echo write $< $(patsubst %.prg,%,$<)                \
-	) | $(C1541)
+	$(C1541) -format "$(patsubst %.d64,%,$@),ff" d64 $@ \
+	-write $< $(patsubst %.prg,%,$<)
 
 .PRECIOUS: %.prg %.vice %.d64
 

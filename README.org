@@ -14,7 +14,8 @@ and diffing between the "techtalk-step-N" branches.
 ** What tools do I need to build this myself?
 
 You'll need a recent build of the ACME cross assembler and a traditional POSIX
-development environment (ie: make and shell).
+development environment (ie: make and shell). mingw32-make can be used on
+Windows.
 
 ** What's the license?
 
